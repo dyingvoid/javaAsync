@@ -1,6 +1,7 @@
 public class Lucky {
-    static volatile int x = 0;
-    static volatile int count = 0;
+    //static StateObject x = new StateObject(0);
+    private static volatile int x = 0;
+    private static volatile int count = 0;
     static Object lock = new Object();
 
     static class LuckyThread extends Thread {
@@ -9,7 +10,8 @@ public class Lucky {
             synchronized (lock) {
                 while (x < 999999) {
                     x++;
-                    if ((x % 10) + (x / 10) % 10 + (x / 100) % 10 == (x / 1000)
+                    if ((x % 10) + (x / 10) % 10 +
+                            (x / 100) % 10 == (x / 1000)
                             % 10 + (x / 10000) % 10 + (x / 100000) % 10) {
                         System.out.println(x);
                         count++;
