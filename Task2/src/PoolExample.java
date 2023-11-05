@@ -55,16 +55,14 @@ public class PoolExample {
         if(futures.size() < maxCount)
             return;
 
-        int index = 0;
         while(true){
-            Future<?> future = futures.get(index);
-            if(future.isDone()){
-                futures.remove(index);
-                break;
+            for(int i = 0; i < futures.size(); i++){
+                Future<?> future = futures.get(i);
+                if(future.isDone()){
+                    futures.remove(i);
+                    return;
+                }
             }
-            if(index == futures.size() - 1)
-                index = 0;
-            index++;
         }
     }
 }
