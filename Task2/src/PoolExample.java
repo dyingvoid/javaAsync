@@ -45,14 +45,16 @@ public class PoolExample {
                     return null;
                 });
                 futures.add(task);
+                AwaitAnyTaskCompletion(futures, executor.getMaximumPoolSize());
             }
-
-            AwaitAnyTaskCompletion(futures);
         }
         executor.shutdown();
     }
 
-    private static void AwaitAnyTaskCompletion(List<Future<?>> futures) {
+    private static void AwaitAnyTaskCompletion(List<Future<?>> futures, int maxCount) {
+        if(futures.size() < maxCount)
+            return;
+
         int index = 0;
         while(true){
             Future<?> future = futures.get(index);
