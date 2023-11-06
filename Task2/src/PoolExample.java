@@ -1,9 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PoolExample {
@@ -24,7 +21,7 @@ public class PoolExample {
 
         // отправляем задачи на выполнение
         for (int i = 0; i < 10; i++) {
-            List<Future<?>> futures = new ArrayList<>();
+            //List<Future<?>> futures = new ArrayList<>();
             final int number = i * 3;
 
             for(int j = number; j < number + executor.getMaximumPoolSize(); j++){
@@ -44,11 +41,16 @@ public class PoolExample {
                     System.out.println("end #" + taskNumber + ", in progress: " + working + ", done tasks: " + count.incrementAndGet());
                     return null;
                 });
-                futures.add(task);
-                AwaitAnyTaskCompletion(futures, executor.getMaximumPoolSize());
+                //futures.add(task);
+                //AwaitAnyTaskCompletion(futures, executor.getMaximumPoolSize());
+                AwaitAnyTaskCompletion(executor.getQueue());
             }
         }
         executor.shutdown();
+    }
+
+    private static void AwaitAnyTaskCompletion(BlockingQueue<?> queue){
+        while(queue.remainingCapacity() == 0);
     }
 
     private static void AwaitAnyTaskCompletion(List<Future<?>> futures, int maxCount) {
