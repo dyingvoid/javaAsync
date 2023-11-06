@@ -1,19 +1,38 @@
 public class StateObject {
     private volatile int x;
     private volatile int count;
+    private static Object lock = new Object();
 
     public StateObject(int number){
         this.x = number;
         this.count = number;
     }
 
-    public synchronized void incrementX() { x++; };
+    public void incrementX() {
+        synchronized (lock){
+            x++;
+        }
+    }
 
-    public synchronized void incrementCount() { count++; }
+    public void incrementCount() {
+        synchronized (lock){
+            count++;
+        }
+    }
 
-    public synchronized int getX(){ return x; }
+    public int getX(){
+        synchronized (lock){
+            return x;
+        }
+    }
 
-    public synchronized int getCount() {
-        return count;
+    public int getCount() {
+        synchronized (lock){
+            return count;
+        }
+    }
+
+    public boolean xLessThan(int value){
+        return x < value;
     }
 }
