@@ -1,21 +1,20 @@
 public class Lucky {
     static volatile StateObject x = new StateObject(0);
-
-    static Object lock = new Object();
+    static volatile StateObject count = new StateObject(0);
 
     static class LuckyThread extends Thread {
         @Override
         public void run() {
-            while (x.xLessThan(999999)) {
-                    x.incrementX();
-                    if ((x.getX() % 10) + (x.getX() / 10) % 10 +
-                            (x.getX() / 100) % 10 == (x.getX() / 1000)
-                            % 10 + (x.getX() / 10000) % 10 + (x.getX() / 100000) % 10) {
+            while (x.lessThan(999999)) {
+                    x.increment();
+                    if ((x.get() % 10) + (x.get() / 10) % 10 +
+                            (x.get() / 100) % 10 == (x.get() / 1000)
+                            % 10 + (x.get() / 10000) % 10 + (x.get() / 100000) % 10) {
                         //System.out.println(x);
-                        x.incrementCount();
+                        count.increment();
                     }
                     System.out.println(this.getName());
-                    System.out.println(x.getX());
+                    System.out.println(x.get());
             }
         }
     }
@@ -30,6 +29,6 @@ public class Lucky {
         t1.join();
         t2.join();
         t3.join();
-        System.out.println("Total: " + x.getCount());
+        System.out.println("Total: " + count.get() + " " + x.get());
     }
 }
